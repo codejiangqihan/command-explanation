@@ -16,11 +16,11 @@ export async function onRequest(context) {
         const apiResponse = await fetch('https://duckduckgo-ai.codeqihan.workers.dev/v1/chat/completions', {
             method: 'POST',
             headers: {
-                'Authorization': `Bearer ${context.env.YOUR_APIKEY}`, // 使用你的API密钥
+                'Authorization': `Bearer ${context.env.YOUR_APIKEY}`, // 确保API密钥正确
                 'Content-Type': 'application/json'
             },
             body: JSON.stringify({
-                model: 'gpt-4o-mini', // 使用你指定的模型
+                model: 'gpt-4o-mini',
                 messages: [
                     { role: 'user', content: `请解释以下词语或命令的含义: ${text}` }
                 ]
@@ -28,7 +28,8 @@ export async function onRequest(context) {
         });
 
         if (!apiResponse.ok) {
-            return new Response(`Error from API: ${apiResponse.statusText}`, { status: apiResponse.status });
+            const errorDetails = await apiResponse.text(); // 捕获API响应中的详细错误信息
+            return new Response(`Error from API: ${apiResponse.statusText}\nDetails: ${errorDetails}`, { status: apiResponse.status });
         }
 
         const data = await apiResponse.json();
