@@ -2,7 +2,6 @@ export async function onRequest(context) {
     try {
         const { request } = context;
 
-        // 检查请求方法是否为POST
         if (request.method !== 'POST') {
             return new Response('Method Not Allowed', { status: 405 });
         }
@@ -13,38 +12,36 @@ export async function onRequest(context) {
             return new Response('Bad Request: Missing input text', { status: 400 });
         }
 
-        // 调用OpenAI GPT API获取含义
-        const openAiResponse = await fetch('https://duckduckgo-ai.codeqihan.workers.dev/v1/chat/completions', {
+        // 调用第三方API获取含义
+        const apiResponse = await fetch('https://duckduckgo-ai.codeqihan.workers.dev/v1/chat/completions', {
             method: 'POST',
             headers: {
-                'Authorization': `Bearer ${context.env.OPENAI_API_KEY}`,
+                'Authorization': `Bearer ${context.env.YOUR_APIKEY}`, // 使用你的API密钥
                 'Content-Type': 'application/json'
             },
             body: JSON.stringify({
-                model: 'gpt-4o-mini',
-                prompt: `请解释以下词语或命令的含义: ${text}`,
-                max_tokens: 150
+                model: 'gpt-4o-mini', // 使用你指定的模型
+                messages: [
+                    { role: 'user', content: `请解释以下词语或命令的含义: ${text}` }
+                ]
             })
         });
 
-        // 检查API响应是否成功
-        if (!openAiResponse.ok) {
-            return new Response(`Error from OpenAI API: ${openAiResponse.statusText}`, { status: openAiResponse.status });
+        if (!apiResponse.ok) {
+            return new Response(`Error from API: ${apiResponse.statusText}`, { status: apiResponse.status });
         }
 
-        const data = await openAiResponse.json();
+        const data = await apiResponse.json();
 
-        // 确保返回的数据中包含所需的字段
         if (data && data.choices && data.choices.length > 0) {
-            const definition = data.choices[0].text.trim();
+            const definition = data.choices[0].message.content.trim();
             return new Response(JSON.stringify({ definition }), {
                 headers: { 'Content-Type': 'application/json' },
             });
         } else {
-            return new Response('Bad response format from OpenAI API', { status: 502 });
+            return new Response('Bad response format from API', { status: 502 });
         }
     } catch (error) {
-        // 捕获和处理所有错误
         console.error('Error occurred:', error);
         return new Response('Internal Server Error', { status: 500 });
     }
