@@ -21,7 +21,7 @@ export async function onRequest(context) {
                 'Content-Type': 'application/json'
             },
             body: JSON.stringify({
-                model: 'text-davinci-003',
+                model: 'gpt-4o-mini',
                 prompt: `请解释以下词语或命令的含义: ${text}`,
                 max_tokens: 150
             })
