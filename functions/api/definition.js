@@ -16,7 +16,7 @@ export async function onRequest(context) {
         const apiResponse = await fetch('https://duckduckgo-ai.codeqihan.workers.dev/v1/chat/completions', {
             method: 'POST',
             headers: {
-                'Authorization': `Bearer ${context.env.YOUR_APIKEY}`, // 确保API密钥正确
+                'Authorization': `Bearer VC1rtxR2P6uoCNvg4gxf`, // 确保API密钥正确
                 'Content-Type': 'application/json'
             },
             body: JSON.stringify({
