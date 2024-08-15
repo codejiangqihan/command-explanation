@@ -16,7 +16,7 @@ export async function onRequest(context) {
         const apiResponse = await fetch('https://duckduckgo-ai.codeqihan.workers.dev/v1/chat/completions', {
             method: 'POST',
             headers: {
-                'Authorization': `Bearer VC1rtxR2P6uoCNvg4gxf`, // 确保API密钥正确
+                'Authorization': `Bearer VC1rtxR2P6uoCNvg4gxf`,
                 'Content-Type': 'application/json'
             },
             body: JSON.stringify({
@@ -28,14 +28,20 @@ export async function onRequest(context) {
         });
 
         if (!apiResponse.ok) {
-            const errorDetails = await apiResponse.text(); // 捕获API响应中的详细错误信息
+            const errorDetails = await apiResponse.text();
             return new Response(`Error from API: ${apiResponse.statusText}\nDetails: ${errorDetails}`, { status: apiResponse.status });
         }
 
         const data = await apiResponse.json();
 
         if (data && data.choices && data.choices.length > 0) {
-            const definition = data.choices[0].message.content.trim();
+            let definition = data.choices[0].message.content.trim();
+
+            // 检查并去除末尾的 "undefined"
+            if (definition.endsWith("undefined")) {
+                definition = definition.slice(0, -9).trim(); // 去除 "undefined" 和可能的空格
+            }
+
             return new Response(JSON.stringify({ definition }), {
                 headers: { 'Content-Type': 'application/json' },
             });
