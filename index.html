@@ -65,15 +65,6 @@
             color: #FFFFFF;
         }
         /* Markdown 样式 */
-        #output h1, #output h2, #output h3, #output h4, #output h5, #output h6 {
-            color: #FFFFFF;
-            margin-top: 1em;
-            margin-bottom: 0.5em;
-        }
-        #output p {
-            margin-top: 0.5em;
-            margin-bottom: 0.5em;
-        }
         #output pre {
             background-color: #272822;
             color: #F8F8F2;
@@ -81,35 +72,8 @@
             border-radius: 4px;
             overflow-x: auto;
         }
-        #output code {
-            background-color: #2D2D2D;
-            color: #F8F8F2;
-            padding: 2px 4px;
-            border-radius: 4px;
-        }
-        #output pre code {
-            background-color: transparent;
-            padding: 0;
-        }
-        #output blockquote {
-            border-left: 4px solid #CCCCCC;
-            padding-left: 15px;
-            color: #AAAAAA;
-            margin: 1em 0;
-        }
-        #output ul, #output ol {
-            margin: 1em 0;
-            padding-left: 20px;
-            color: #FFFFFF;
-        }
-        #output ul {
-            list-style-type: disc;
-        }
-        #output ol {
-            list-style-type: decimal;
-        }
     </style>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/marked/4.3.0/marked.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/showdown/2.1.0/showdown.min.js"></script>
 </head>
 <body>
     <div class="container">
@@ -125,6 +89,8 @@
     </div>
 
     <script>
+        const converter = new showdown.Converter();
+
         async function getDefinition() {
             const inputText = document.getElementById('inputText').value;
             const response = await fetch('/api/definition', {
@@ -137,7 +103,7 @@
             const result = await response.json();
 
             const markdownContent = result.definition || '无法获取含义';
-            const htmlContent = marked.parse(markdownContent);
+            const htmlContent = converter.makeHtml(markdownContent);
 
             document.getElementById('output').innerHTML = htmlContent;
         }
