@@ -61,6 +61,8 @@
             white-space: pre-wrap;
         }
     </style>
+    <!-- 引入 marked.js -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/marked/4.3.0/marked.min.js"></script>
 </head>
 <body>
     <div class="container">
@@ -86,7 +88,13 @@
                 body: JSON.stringify({ text: inputText })
             });
             const result = await response.json();
-            document.getElementById('output').textContent = result.definition || '无法获取含义';
+
+            // 使用 marked.js 将 Markdown 转换为 HTML
+            const markdownContent = result.definition || '无法获取含义';
+            const htmlContent = marked.parse(markdownContent);
+
+            // 将转换后的HTML内容显示在页面上
+            document.getElementById('output').innerHTML = htmlContent;
         }
     </script>
 </body>
