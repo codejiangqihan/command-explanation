@@ -23,7 +23,7 @@ export async function onRequest(context) {
                 model: 'gpt-4o-mini',
                 messages: [
                     { role: 'system', content: `你是一个负责解释Linux命令的语言模型。请确保输出内容中不包含任何 Markdown 格式（例如，避免使用 `#`, `*`, `[链接]`, 等符号）。只生成纯文本。` },
-                    { role: 'user', content: `请解释以下Linux命令的含义（只能回答关于命令的含义，不能回答别的，需要具体地解析）: ${text}` }
+                    { role: 'user', content: `请解释以下Linux命令的含义（只能回答关于命令的含义，不能回答别的，需要具体地解析）: ${text}` },
                 ]
             })
         });
