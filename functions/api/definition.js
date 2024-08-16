@@ -22,7 +22,7 @@ export async function onRequest(context) {
             body: JSON.stringify({
                 model: 'gpt-4o-mini',
                 messages: [
-                    { role: 'user', content: `请解释以下Linux命令的含义（只能回答关于命令的含义，不能回答别的，需要具体地解析。确保输出内容中不包含任何 Markdown 格式（例如，避免使用 `#`, `*`, `[链接]`, 等符号）。只生成纯文本。）: ${text}` }
+                    { role: 'user', content: `请解释以下Linux命令的含义（只能回答关于命令的含义，不能回答别的，需要具体地解析。确保输出内容中不包含任何 Markdown 格式（例如，避免使用#, *, [链接], 等符号）。只生成纯文本）: ${text}` }
                 ]
             })
         });
