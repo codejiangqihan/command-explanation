@@ -22,7 +22,7 @@ export async function onRequest(context) {
             body: JSON.stringify({
                 model: 'gpt-4o-mini',
                 messages: [
-                    { role: 'user', content: `请解释以下Linux命令的含义（只能回答关于命令的含义，不能回答别的）: ${text}` }
+                    { role: 'user', content: `请解释以下Linux命令的含义（只能回答关于命令的含义，不能回答别的，需要具体地解析）: ${text}` }
                 ]
             })
         });
