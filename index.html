@@ -94,6 +94,10 @@
             border-radius: 0.75rem;
             border: 2px solid var(--border-color);
             min-height: 100px;
+            white-space: pre-wrap;
+            word-wrap: break-word;
+            font-family: monospace;
+            line-height: 1.6;
         }
 
         .result-container:empty::before {
@@ -161,7 +165,7 @@
                 }
 
                 const result = await response.json();
-                output.textContent = result.definition || '未找到该命令的解释';
+                output.textContent = (result.definition || '未找到该命令的解释').replace(/\\n/g, '\n');
             } catch (error) {
                 output.textContent = '查询失败，请稍后重试';
                 console.error('Error:', error);
