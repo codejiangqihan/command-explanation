@@ -8,4 +8,8 @@ const nextConfig: NextConfig = {
     "@ant-design/icons-svg"
   ]
 };
-module.exports = nextConfig
+const nextConfig = {
+  output: 'export',
+}
+
+export default nextConfig;
