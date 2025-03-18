@@ -43,7 +43,7 @@ export default function Home() {
     }
   };
 
-  const handleKeyPress = (e: React.KeyboardEvent<HTMLInputElement>) => {
+  const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
     if (e.key === 'Enter') {
       getDefinition();
     }
@@ -58,7 +58,7 @@ export default function Home() {
           placeholder="输入要查询的命令，例如：ls"
           value={inputText}
           onChange={(e) => setInputText(e.target.value)}
-          onKeyPress={handleKeyPress}
+          onKeyDown={handleKeyDown}
           size="large"
           className={styles.input}
           spellCheck={false}
