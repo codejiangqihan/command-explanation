@@ -1,7 +1,7 @@
 const API_CONFIG = {
     URL: 'https://duckduckgo-ai.codeqihan.workers.dev/v1/chat/completions',
-    TOKEN: 'VC1rtxR2P6uoCNvg4gxf',
-    MODEL: 'gpt-4o-mini'
+    TOKEN: 'y5YUvgrbFvBVinf5VGpK',
+    MODEL: 'o3-mini'
 };
 
 const SYSTEM_PROMPT = `你是一个专业的Linux命令解释助手。请按照以下格式解释命令，每个部分请单独成段：
