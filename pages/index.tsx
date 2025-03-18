@@ -1,94 +1,110 @@
-import { useState } from 'react';
-import { Input, Button, Card, Typography, Spin } from 'antd';
-import { SearchOutlined } from '@ant-design/icons';
-import styles from '../styles/Home.module.css';
+import React, { useState } from 'react';
+import { Input, Button, Card, Typography, message, Spin } from 'antd';
+import { SendOutlined } from '@ant-design/icons';
 
-const { Title, Text } = Typography;
+const { Title } = Typography;
 
-export default function Home() {
-  const [inputText, setInputText] = useState<string>('');
-  const [result, setResult] = useState<string>('');
-  const [loading, setLoading] = useState<boolean>(false);
+const Home: React.FC = () => {
+  const [inputText, setInputText] = useState('');
+  const [definition, setDefinition] = useState('');
+  const [loading, setLoading] = useState(false);
 
   const getDefinition = async () => {
-    const trimmedInput = inputText.trim();
-    if (!trimmedInput) {
-      setResult('请输入要查询的命令');
+    const trimmedText = inputText.trim();
+    if (!trimmedText) {
+      setDefinition('请输入要查询的命令');
+      message.warning('请输入要查询的命令');
       return;
     }
 
+    setLoading(true);
+    setDefinition('正在查询...');
     try {
-      setLoading(true);
-      setResult('正在查询...');
-      
       const response = await fetch('/api/definition', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'
         },
-        body: JSON.stringify({ text: trimmedInput })
+        body: JSON.stringify({ text: trimmedText })
       });
-      
+
       if (!response.ok) {
         throw new Error('网络请求失败');
       }
 
-      const data = await response.json();
-      setResult((data.definition || '未找到该命令的解释').replace(/\\n/g, '\n'));
+      const result = await response.json();
+      setDefinition(result.definition || '未找到该命令的解释');
     } catch (error) {
-      setResult('查询失败，请稍后重试');
       console.error('Error:', error);
+      setDefinition('查询失败，请稍后重试');
     } finally {
       setLoading(false);
     }
   };
 
-  const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
-    if (e.key === 'Enter') {
-      getDefinition();
-    }
-  };
-
   return (
-    <div className={styles.container}>
-      <Card className={styles.card}>
-        <Title level={2} className={styles.title}>命令查询工具</Title>
-        
+    <div
+      style={{
+        minHeight: '100vh',
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+        backgroundColor: '#f8fafc',
+        padding: '1rem'
+      }}
+    >
+      <Card
+        style={{
+          width: '100%',
+          maxWidth: 700,
+          borderRadius: '1rem',
+          padding: '2rem',
+          boxShadow: '0 4px 6px rgba(0, 0, 0, 0.1)'
+        }}
+      >
+        <Title level={2} style={{ textAlign: 'center', marginBottom: '1.5rem', color: '#1e293b' }}>
+          命令查询工具
+        </Title>
         <Input
           placeholder="输入要查询的命令，例如：ls"
           value={inputText}
           onChange={(e) => setInputText(e.target.value)}
-          onKeyDown={handleKeyDown}
-          size="large"
-          className={styles.input}
-          spellCheck={false}
+          onPressEnter={getDefinition}
           autoComplete="off"
-        />
-        
-        <Button 
-          type="primary" 
-          icon={<SearchOutlined />}
+          spellCheck={false}
           size="large"
+          style={{ marginBottom: '1rem', borderRadius: '0.75rem' }}
+        />
+        <Button
+          type="primary"
+          icon={<SendOutlined />}
           onClick={getDefinition}
-          className={styles.button}
+          size="large"
           block
+          style={{ marginBottom: '1rem' }}
         >
           查询命令含义
         </Button>
-        
-        <div className={styles.resultContainer}>
+        <Card
+          style={{
+            marginTop: '2rem',
+            borderColor: '#e2e8f0',
+            backgroundColor: '#f8fafc',
+            minHeight: '100px',
+            borderRadius: '0.75rem'
+          }}
+        >
           {loading ? (
-            <div className={styles.loadingContainer}>
-              <Spin />
-              <Text className={styles.loadingText}>正在查询...</Text>
-            </div>
+            <Spin tip="正在查询..." />
           ) : (
-            <pre className={styles.resultText}>
-              {result || '在上方输入命令并点击查询按钮'}
+            <pre style={{ whiteSpace: 'pre-wrap', wordWrap: 'break-word', fontFamily: 'monospace', margin: 0 }}>
+              {definition || '在上方输入命令并点击查询按钮'}
             </pre>
           )}
-        </div>
+        </Card>
       </Card>
     </div>
   );
-} 
+};
+
+export default Home; 
