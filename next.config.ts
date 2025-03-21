@@ -6,6 +6,7 @@ const nextConfig: NextConfig = {
     'rc-util',
     "rc-picker",
     "rc-pagination",
+    "@rc-component/util",
     "@ant-design/icons-svg"
   ]
 };
