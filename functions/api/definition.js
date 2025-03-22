@@ -1,7 +1,7 @@
 const API_CONFIG = {
-    URL: 'https://duckduckgo-ai.codeqihan.workers.dev/v1/chat/completions',
-    TOKEN: 'y5YUvgrbFvBVinf5VGpK',
-    MODEL: 'o3-mini'
+  URL: "https://duckduckgo-ai.codeqihan.workers.dev/v1/chat/completions",
+  TOKEN: "y5YUvgrbFvBVinf5VGpK",
+  MODEL: "o3-mini",
 };
 
 const SYSTEM_PROMPT = `你是一个专业的Linux命令解释助手。请按照以下格式解释命令，每个部分请单独成段：
@@ -26,64 +26,64 @@ const SYSTEM_PROMPT = `你是一个专业的Linux命令解释助手。请按照�
 5. 保持专业、简洁、易懂的表达方式`;
 
 async function callAIAPI(text) {
-    const response = await fetch(API_CONFIG.URL, {
-        method: 'POST',
-        headers: {
-            'Authorization': `Bearer ${API_CONFIG.TOKEN}`,
-            'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({
-            model: API_CONFIG.MODEL,
-            messages: [
-                { role: 'system', content: SYSTEM_PROMPT },
-                { role: 'user', content: `请解释以下Linux命令: ${text}` }
-            ]
-        })
-    });
+  const response = await fetch(API_CONFIG.URL, {
+    method: "POST",
+    headers: {
+      Authorization: `Bearer ${API_CONFIG.TOKEN}`,
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({
+      model: API_CONFIG.MODEL,
+      messages: [
+        { role: "system", content: SYSTEM_PROMPT },
+        { role: "user", content: `请解释以下Linux命令: ${text}` },
+      ],
+    }),
+  });
 
-    if (!response.ok) {
-        const errorText = await response.text();
-        throw new Error(`API Error (${response.status}): ${errorText}`);
-    }
+  if (!response.ok) {
+    const errorText = await response.text();
+    throw new Error(`API Error (${response.status}): ${errorText}`);
+  }
 
-    return response.json();
+  return response.json();
 }
 
 export async function onRequest(context) {
-    try {
-        const { request } = context;
+  try {
+    const { request } = context;
 
-        if (request.method !== 'POST') {
-            return new Response('Method Not Allowed', { status: 405 });
-        }
-
-        const { text } = await request.json();
-
-        if (!text) {
-            return new Response('Bad Request: Missing input text', { status: 400 });
-        }
-
-        const data = await callAIAPI(text);
-
-        if (data?.choices?.[0]?.message?.content) {
-            const definition = data.choices[0].message.content.trim();
-            return new Response(JSON.stringify({ definition }), {
-                headers: { 'Content-Type': 'application/json' },
-            });
-        }
-
-        return new Response('Invalid API Response Format', { status: 502 });
-    } catch (error) {
-        console.error('Error occurred:', error);
-        return new Response(
-            JSON.stringify({
-                error: 'Internal Server Error',
-                message: error.message
-            }), 
-            { 
-                status: 500,
-                headers: { 'Content-Type': 'application/json' }
-            }
-        );
+    if (request.method !== "POST") {
+      return new Response("Method Not Allowed", { status: 405 });
     }
+
+    const { text } = await request.json();
+
+    if (!text) {
+      return new Response("Bad Request: Missing input text", { status: 400 });
+    }
+
+    const data = await callAIAPI(text);
+
+    if (data?.choices?.[0]?.message?.content) {
+      const definition = data.choices[0].message.content.trim();
+      return new Response(JSON.stringify({ definition }), {
+        headers: { "Content-Type": "application/json" },
+      });
+    }
+
+    return new Response("Invalid API Response Format", { status: 502 });
+  } catch (error) {
+    console.error("Error occurred:", error);
+    return new Response(
+      JSON.stringify({
+        error: "Internal Server Error",
+        message: error.message,
+      }),
+      {
+        status: 500,
+        headers: { "Content-Type": "application/json" },
+      },
+    );
+  }
 }

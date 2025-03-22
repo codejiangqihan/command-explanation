@@ -1,14 +1,14 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
-  output: 'export',
+  output: "export",
   transpilePackages: [
-    'rc-util',
+    "rc-util",
     "rc-picker",
     "rc-pagination",
     "@rc-component/util",
-    "@ant-design/icons-svg"
-  ]
+    "@ant-design/icons-svg",
+  ],
 };
 
 export default nextConfig;
