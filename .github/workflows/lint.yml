@@ -19,7 +19,7 @@ jobs:
       run: npm install -g prettier
     - name: Run Prettier
       run: |
-          prettier --write "pages/**/*.{js,ts,jsx,tsx}"
+          prettier --write "**/*.{js,ts,jsx,tsx}"
     - name: Commit change & Push
       continue-on-error: true
       run: |
