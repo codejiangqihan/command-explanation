@@ -8,6 +8,7 @@ const Home: React.FC = () => {
   const [inputText, setInputText] = useState("");
   const [definition, setDefinition] = useState("");
   const [loading, setLoading] = useState(false);
+  const [hasQueried, setHasQueried] = useState(false);
 
   const getDefinition = async () => {
     const trimmedText = inputText.trim();
@@ -19,6 +20,7 @@ const Home: React.FC = () => {
 
     setLoading(true);
     setDefinition("正在查询...");
+    setHasQueried(true);
     try {
       const response = await fetch("/api/definition", {
         method: "POST",
@@ -92,30 +94,32 @@ const Home: React.FC = () => {
         >
           查询命令含义
         </Button>
-        <Card
-          style={{
-            marginTop: "2rem",
-            borderColor: "#e2e8f0",
-            backgroundColor: "#f8fafc",
-            minHeight: "100px",
-            borderRadius: "0.75rem",
-          }}
-        >
-          {loading ? (
-            <Spin tip="正在查询..." />
-          ) : (
-            <pre
-              style={{
-                whiteSpace: "pre-wrap",
-                wordWrap: "break-word",
-                fontFamily: "monospace",
-                margin: 0,
-              }}
-            >
-              {definition || "在上方输入命令并点击查询按钮"}
-            </pre>
-          )}
-        </Card>
+        {hasQueried && (
+          <Card
+            style={{
+              marginTop: "2rem",
+              borderColor: "#e2e8f0",
+              backgroundColor: "#f8fafc",
+              minHeight: "100px",
+              borderRadius: "0.75rem",
+            }}
+          >
+            {loading ? (
+              <Spin tip="正在查询..." />
+            ) : (
+              <pre
+                style={{
+                  whiteSpace: "pre-wrap",
+                  wordWrap: "break-word",
+                  fontFamily: "monospace",
+                  margin: 0,
+                }}
+              >
+                {definition}
+              </pre>
+            )}
+          </Card>
+        )}
       </Card>
     </div>
   );
